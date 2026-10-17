@@ -2,6 +2,7 @@ package net.giome.testmod.item.custom;
 
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -13,37 +14,29 @@ import net.minecraft.world.level.Level;
 
 public class magic_stick extends Item {
 
-    @Override
-    public InteractionResult use(Level level, Player player, InteractionHand hand) {
-        if (!level.isClientSide()) {
-            ItemStack stack = player.getItemInHand(hand);
-            CustomData data = stack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY);
-
-            if (!data.isEmpty()) {
-                CompoundTag tag = data.copyTag();
-                if (tag.contains("x") && tag.contains("power") && tag.contains("delay")) {
-                    int x = tag.getInt("x").orElse(0);
-                    int y = tag.getInt("y").orElse(0);
-                    int z = tag.getInt("z").orElse(0);
-                    float power = tag.getFloat("power").orElse(10f);
-                    int delay = tag.getInt("delay").orElse(60);
-
-                    net.giome.testmod.network.DelayedExplosion.schedule(
-                            (net.minecraft.server.level.ServerLevel) level,
-                            x + 0.5, y, z + 0.5, power, delay
-                    );
-                }
-            }
-        }
-        return InteractionResult.SUCCESS;
+    public magic_stick(Properties properties) {
+        super(properties);
     }
 
     @Override
     public InteractionResult useOn(UseOnContext context) {
-        return use(context.getLevel(), context.getPlayer(), context.getHand());
-    }
+        Level level = context.getLevel();
 
-    public magic_stick(Properties properties) {
-        super(properties);
+        // Exécuter l'explosion uniquement côté serveur
+        if (!level.isClientSide() && level instanceof ServerLevel serverLevel) {
+            var pos = context.getClickedPos();
+
+            // Créer une explosion au centre du bloc visé
+            serverLevel.explode(
+                    null,
+                    pos.getX() + 0.5,
+                    pos.getY() + 0.5,
+                    pos.getZ() + 0.5,
+                    4.0f,
+                    Level.ExplosionInteraction.TNT
+            );
+        }
+
+        return InteractionResult.SUCCESS;
     }
 }

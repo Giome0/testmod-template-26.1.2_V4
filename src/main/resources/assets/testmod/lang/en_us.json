@@ -18,5 +18,8 @@
 
   "creativetab.testmod.resonite_items": "Resonite Items",
   "creativetab.testmod.resonite_missils": "Missils Items",
-  "creativetab.testmod.resonite_blocks": "Resonite Blocks"
+  "creativetab.testmod.resonite_blocks": "Resonite Blocks",
+
+  "effect.testmod.curse_of_death": "Curse Of Death",
+  "effect.testmod.curse_of_death.description": "Cause death around you"
 }

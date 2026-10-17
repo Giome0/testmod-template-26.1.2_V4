@@ -3,6 +3,7 @@ package net.giome.testmod;
 import net.giome.testmod.block.ModBlocks;
 import net.giome.testmod.block.entity.ModBlockEntities;
 import net.giome.testmod.creativemodtab.ModCreativeModTabs;
+import net.giome.testmod.effect.ModEffect;
 import net.giome.testmod.item.ModItems;
 import net.giome.testmod.menu.ModMenuTypes;
 import net.giome.testmod.network.DelayedExplosion;
@@ -55,6 +56,8 @@ public class TestMod {
         modEventBus.addListener(this::commonSetup);
 
         ModCreativeModTabs.register(modEventBus);
+
+        ModEffect.register(modEventBus);
 
         ModItems.register(modEventBus);
         ModBlocks.register(modEventBus);
