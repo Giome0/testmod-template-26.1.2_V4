@@ -27,5 +27,8 @@
   "effect.testmod.curse_of_hatred.description": "Everything want your death",
 
   "effect.testmod.blessing_of_love": "Blessing Of Love",
-  "effect.testmod.blessing_of_love.description": "Everything loves you"
+  "effect.testmod.blessing_of_love.description": "Everything loves you",
+
+  "effect.testmod.curse_of_loneliness": "Curse Of Loneliness",
+  "effect.testmod.curse_of_loneliness.description": "Everything that loves you die"
 }

@@ -36,10 +36,7 @@ public class ModEffectEvents {
                 love.getDuration()
         );
 
-        int amplifier = Math.max(
-                death.getAmplifier(),
-                love.getAmplifier()
-        );
+        int amplifier = death.getAmplifier() + love.getAmplifier() + 1;
 
         // Remove the original effects.
         entity.removeEffect(ModEffect.CURSE_OF_DEATH);
