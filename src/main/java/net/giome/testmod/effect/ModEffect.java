@@ -16,6 +16,9 @@ public class ModEffect {
     public static final Holder<MobEffect> CURSE_OF_DEATH = MOB_EFFECTS.register("curse_of_death",
             () -> new CurseOfDeath(MobEffectCategory.NEUTRAL, 000000));
 
+    public static final Holder<MobEffect> CURSE_OF_HATRED = MOB_EFFECTS.register("curse_of_hatred",
+            () -> new CurseOfHatred(MobEffectCategory.NEUTRAL, 000000));
+
     public static void register(IEventBus eventBus) {
         MOB_EFFECTS.register(eventBus);
     }
