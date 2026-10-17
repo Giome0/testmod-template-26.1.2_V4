@@ -50,7 +50,7 @@ public class terminal extends BaseEntityBlock {
     protected MapCodec<? extends BaseEntityBlock> codec() {
         return CODEC;
     }
-
+//aaaa
     @Override
     public @Nullable BlockEntity newBlockEntity(BlockPos worldPosition, BlockState blockState) {
         return new terminalEntity(worldPosition, blockState);
