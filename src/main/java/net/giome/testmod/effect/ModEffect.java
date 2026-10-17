@@ -22,6 +22,10 @@ public class ModEffect {
     public static final Holder<MobEffect> BLESSING_OF_LOVE = MOB_EFFECTS.register("blessing_of_love",
             () -> new BlessingOfLove(MobEffectCategory.BENEFICIAL, 0xFF0000));
 
+
+    public static final Holder<MobEffect> CURSE_OF_LONELINESS = MOB_EFFECTS.register("curse_of_loneliness",
+            () -> new CurseOfLoneliness(MobEffectCategory.NEUTRAL, 0x4B0082));
+
     public static void register(IEventBus eventBus) {
         MOB_EFFECTS.register(eventBus);
     }
