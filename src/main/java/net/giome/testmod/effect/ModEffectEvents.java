@@ -1,12 +1,14 @@
-
 package net.giome.testmod.effect;
 
 import net.giome.testmod.TestMod;
+import net.minecraft.core.Holder;
+import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
 import net.neoforged.neoforge.event.tick.EntityTickEvent;
 
 @EventBusSubscriber(modid = TestMod.MODID)
@@ -20,12 +22,11 @@ public class ModEffectEvents {
             return;
         }
 
-        // Exécuter uniquement côté serveur.
         if (entity.level().isClientSide()) {
             return;
         }
 
-        // Ne pas fusionner une deuxième fois.
+        // Fusion de Curse of Death + Blessing of Love.
         if (entity.hasEffect(ModEffect.CURSE_OF_LONELINESS)) {
             return;
         }
@@ -55,6 +56,47 @@ public class ModEffectEvents {
                 ModEffect.CURSE_OF_LONELINESS,
                 duration,
                 amplifier
+        ));
+    }
+
+    @SubscribeEvent
+    public static void onLivingDeath(LivingDeathEvent event) {
+        LivingEntity victim = event.getEntity();
+
+        if (victim.level().isClientSide()) {
+            return;
+        }
+
+        Entity attacker = event.getSource().getEntity();
+
+        // La malédiction est transmise uniquement à une entité vivante
+        // responsable de la mort, jamais à un simple projectile.
+        if (!(attacker instanceof LivingEntity killer) || killer == victim) {
+            return;
+        }
+
+        // Seules les malédictions sont transmises. Les bénédictions
+        // ne figurent volontairement pas dans cette liste.
+        transferCurse(victim, killer, ModEffect.CURSE_OF_DEATH);
+        transferCurse(victim, killer, ModEffect.CURSE_OF_HATRED);
+        transferCurse(victim, killer, ModEffect.CURSE_OF_LONELINESS);
+    }
+
+    private static void transferCurse(
+            LivingEntity victim,
+            LivingEntity killer,
+            Holder<MobEffect> curse
+    ) {
+        MobEffectInstance instance = victim.getEffect(curse);
+
+        if (instance == null) {
+            return;
+        }
+
+        killer.addEffect(new MobEffectInstance(
+                curse,
+                instance.getDuration(),
+                instance.getAmplifier()
         ));
     }
 }
