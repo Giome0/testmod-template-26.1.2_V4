@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "group": "resonite",
+  "key": {
+    "A": "minecraft:glass",
+    "B": "testmod:resonite_ingot"
+  },
+  "pattern": [
+    "AAA",
+    "ABA",
+    "AAA"
+  ],
+  "result": {
+    "id": "testmod:encapsulated_resonite"
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "activated=false": {
+      "model": "testmod:block/terminal"
+    },
+    "activated=true": {
+      "model": "testmod:block/terminal_on"
+    }
+  }
+}

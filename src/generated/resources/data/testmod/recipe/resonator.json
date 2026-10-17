@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "group": "resonite",
+  "key": {
+    "A": "testmod:encapsulated_resonite",
+    "B": "minecraft:stick",
+    "C": "minecraft:oak_slab"
+  },
+  "pattern": [
+    " A ",
+    " B ",
+    "CCC"
+  ],
+  "result": {
+    "id": "testmod:resonator"
+  }
+}

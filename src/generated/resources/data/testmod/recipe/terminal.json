@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "group": "resonite",
+  "key": {
+    "A": "testmod:screen",
+    "B": "minecraft:nether_star",
+    "C": "testmod:iron_rod",
+    "D": "minecraft:iron_block"
+  },
+  "pattern": [
+    " A ",
+    "CBC",
+    "DDD"
+  ],
+  "result": {
+    "id": "testmod:terminal"
+  }
+}

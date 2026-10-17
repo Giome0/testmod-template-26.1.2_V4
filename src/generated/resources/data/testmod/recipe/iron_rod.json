@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "group": "resonite",
+  "key": {
+    "A": "minecraft:iron_ingot"
+  },
+  "pattern": [
+    "  A",
+    " A ",
+    "A  "
+  ],
+  "result": {
+    "id": "testmod:iron_rod"
+  }
+}
