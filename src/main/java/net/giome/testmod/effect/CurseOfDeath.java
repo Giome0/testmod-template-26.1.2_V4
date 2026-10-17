@@ -16,7 +16,7 @@ public class CurseOfDeath extends MobEffect {
 
     @Override
     public boolean applyEffectTick(ServerLevel serverLevel, LivingEntity mob, int amplification) {
-        AABB boundingBox = mob.getBoundingBox().inflate(amplification + 1);
+        AABB boundingBox = mob.getBoundingBox().inflate(amplification + 2);
         List<Entity> entities = serverLevel.getEntities(mob, boundingBox);
 
         for(Entity entity : entities) {

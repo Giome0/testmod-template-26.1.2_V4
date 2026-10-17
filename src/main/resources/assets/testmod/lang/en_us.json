@@ -21,5 +21,11 @@
   "creativetab.testmod.resonite_blocks": "Resonite Blocks",
 
   "effect.testmod.curse_of_death": "Curse Of Death",
-  "effect.testmod.curse_of_death.description": "Cause death around you"
+  "effect.testmod.curse_of_death.description": "Cause death around you",
+
+  "effect.testmod.curse_of_hatred": "Curse Of Hatred",
+  "effect.testmod.curse_of_hatred.description": "Everything want your death",
+
+  "effect.testmod.blessing_of_love": "Blessing Of Love",
+  "effect.testmod.blessing_of_love.description": "Everything loves you"
 }

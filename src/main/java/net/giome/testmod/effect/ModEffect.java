@@ -14,10 +14,13 @@ public class ModEffect {
             DeferredRegister.create(BuiltInRegistries.MOB_EFFECT, TestMod.MODID);
 
     public static final Holder<MobEffect> CURSE_OF_DEATH = MOB_EFFECTS.register("curse_of_death",
-            () -> new CurseOfDeath(MobEffectCategory.NEUTRAL, 000000));
+            () -> new CurseOfDeath(MobEffectCategory.NEUTRAL, 0x000000));
 
     public static final Holder<MobEffect> CURSE_OF_HATRED = MOB_EFFECTS.register("curse_of_hatred",
-            () -> new CurseOfHatred(MobEffectCategory.NEUTRAL, 000000));
+            () -> new CurseOfHatred(MobEffectCategory.NEUTRAL, 0x8B0000));
+
+    public static final Holder<MobEffect> BLESSING_OF_LOVE = MOB_EFFECTS.register("blessing_of_love",
+            () -> new BlessingOfLove(MobEffectCategory.BENEFICIAL, 0xFF0000));
 
     public static void register(IEventBus eventBus) {
         MOB_EFFECTS.register(eventBus);
