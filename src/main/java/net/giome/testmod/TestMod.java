@@ -11,6 +11,7 @@ import net.giome.testmod.network.ExplodePacket;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 import org.slf4j.Logger;
+import net.giome.testmod.effect.ModEffectEvents;
 
 import com.mojang.logging.LogUtils;
 
@@ -58,6 +59,8 @@ public class TestMod {
         ModCreativeModTabs.register(modEventBus);
 
         ModEffect.register(modEventBus);
+
+        //NeoForge.EVENT_BUS.addListener(ModEffectEvents::onEffectAdded);
 
         ModItems.register(modEventBus);
         ModBlocks.register(modEventBus);
