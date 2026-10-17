@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "group": "resonite",
+  "key": {
+    "A": "testmod:raw_resonite"
+  },
+  "pattern": [
+    "AAA",
+    "AAA",
+    "AAA"
+  ],
+  "result": {
+    "id": "testmod:raw_resonite_block"
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_resonite_block": {
+      "conditions": {
+        "items": [
+          {
+            "items": "testmod:resonite_block"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "testmod:resonite_form_nether_star"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_resonite_block"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "testmod:resonite_form_nether_star"
+    ]
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_raw_resonite": {
+      "conditions": {
+        "items": [
+          {
+            "items": "testmod:raw_resonite"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "testmod:resonite_ingot_from_smelting_raw_resonite"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_raw_resonite"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "testmod:resonite_ingot_from_smelting_raw_resonite"
+    ]
+  }
+}

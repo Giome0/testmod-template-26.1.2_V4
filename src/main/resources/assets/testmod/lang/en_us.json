@@ -1,0 +1,22 @@
+{
+  "item.testmod.resonite_ingot": "Resonite Ingot",
+  "item.testmod.raw_resonite": "Raw Resonite",
+  "item.testmod.resonator": "Resonator",
+  "item.testmod.encapsulated_resonite": "Encapsulated Resonite",
+  "item.testmod.screen": "Screen",
+  "item.testmod.iron_rod": "Iron Rod",
+  "item.testmod.magic_stick": "Magic Stick",
+  "item.testmod.missil": "Missil",
+  "item.testmod.resonite_missil": "Resonite Missil",
+  "item.testmod.refined_resonite_missil": "Refined Resonite Missil",
+
+  "block.testmod.resonite_block": "Block of Resonite",
+  "block.testmod.raw_resonite_block": "Block of Raw Resonite",
+  "block.testmod.resonite_ore": "Resonite Ore",
+  "block.testmod.deepslate_resonite_ore": "Deepslate Resonite Ore",
+  "block.testmod.terminal": "Terminal",
+
+  "creativetab.testmod.resonite_items": "Resonite Items",
+  "creativetab.testmod.resonite_missils": "Missils Items",
+  "creativetab.testmod.resonite_blocks": "Resonite Blocks"
+}

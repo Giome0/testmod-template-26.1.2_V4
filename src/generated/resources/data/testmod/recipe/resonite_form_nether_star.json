@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "group": "resonite",
+  "ingredients": [
+    "testmod:resonite_block",
+    "minecraft:nether_star"
+  ],
+  "result": {
+    "count": 10,
+    "id": "testmod:resonite_ingot"
+  }
+}
