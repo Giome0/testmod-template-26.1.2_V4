@@ -31,7 +31,7 @@ public class ModEffectEvents {
         if (entity.hasEffect(ModEffect.CURSE_OF_LONELINESS)) {
             return;
         }
-
+//a
         MobEffectInstance death =
                 entity.getEffect(ModEffect.CURSE_OF_DEATH);
 
