@@ -18,18 +18,18 @@ import java.util.List;
 @EventBusSubscriber(modid = TestMod.MODID)
 public class CurseOfJudging extends MobEffect {
 
-    private static final double RANGE = 24.0;
-    private static final double TARGET_DISTANCE = 6.0;
+    private static final double RANGE = 15.0;
+    private static final double TARGET_DISTANCE = 8.5;
 
     // Vitesse pour se rapprocher.
-    private static final double APPROACH_SPEED = 1.0;
+    private static final double APPROACH_SPEED = 1.2;
 
     // Vitesse pour s'éloigner.
-    private static final double RETREAT_SPEED = 1.8;
+    private static final double RETREAT_SPEED = 2.2;
 
     // Tolérance autour des 6 blocs pour éviter les changements constants.
-    private static final double MIN_DISTANCE = 5.5;
-    private static final double MAX_DISTANCE = 6.5;
+    private static final double MIN_DISTANCE = 8;
+    private static final double MAX_DISTANCE = 9;
 
     public CurseOfJudging(MobEffectCategory category, int color) {
         super(category, color);

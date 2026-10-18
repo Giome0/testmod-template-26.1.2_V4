@@ -30,5 +30,11 @@
   "effect.testmod.blessing_of_love.description": "Everything loves you",
 
   "effect.testmod.curse_of_loneliness": "Curse Of Loneliness",
-  "effect.testmod.curse_of_loneliness.description": "Everything that loves you die"
+  "effect.testmod.curse_of_loneliness.description": "Everything that loves you die",
+
+  "effect.testmod.curse_of_disgust": "Curse Of Disgust",
+  "effect.testmod.curse_of_disgust.description": "Everything avoid you",
+
+  "effect.testmod.curse_of_judging": "Curse Of Judging",
+  "effect.testmod.curse_of_judging.description": "Everything judge you from afar"
 }

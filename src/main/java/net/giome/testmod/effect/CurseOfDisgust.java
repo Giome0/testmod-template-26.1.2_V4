@@ -19,14 +19,14 @@ import java.util.List;
 public class CurseOfDisgust extends MobEffect {
 
     // Portée dans laquelle la malédiction agit.
-    private static final double BASE_RANGE = 8.0;
-    private static final double RANGE_PER_LEVEL = 4.0;
+    private static final double BASE_RANGE = 12.0;
+    private static final double RANGE_PER_LEVEL = 5.0;
 
     // Distance minimale à maintenir.
-    private static final double BASE_DISTANCE = 6.0;
+    private static final double BASE_DISTANCE = 8.0;
     private static final double DISTANCE_PER_LEVEL = 2.0;
 
-    private static final double ESCAPE_SPEED = 1.2;
+    private static final double ESCAPE_SPEED = 2.2;
 
     public CurseOfDisgust(MobEffectCategory category, int color) {
         super(category, color);
