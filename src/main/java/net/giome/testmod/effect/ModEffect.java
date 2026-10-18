@@ -26,6 +26,13 @@ public class ModEffect {
     public static final Holder<MobEffect> CURSE_OF_LONELINESS = MOB_EFFECTS.register("curse_of_loneliness",
             () -> new CurseOfLoneliness(MobEffectCategory.NEUTRAL, 0x4B0082));
 
+    public static final Holder<MobEffect> CURSE_OF_DISGUST = MOB_EFFECTS.register("curse_of_disgust",
+            () -> new CurseOfLoneliness(MobEffectCategory.NEUTRAL, 0x004705));
+
+    public static final Holder<MobEffect> CURSE_OF_JUDGING = MOB_EFFECTS.register("curse_of_judging",
+            () -> new CurseOfJudging(MobEffectCategory.NEUTRAL, 0x696969));
+
+
     public static void register(IEventBus eventBus) {
         MOB_EFFECTS.register(eventBus);
     }
