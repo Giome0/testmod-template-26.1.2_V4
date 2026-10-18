@@ -191,32 +191,20 @@ public class ModEffectEvents {
         }
     }
 
+
     @SubscribeEvent
     public static void onLivingDeath(LivingDeathEvent event) {
         LivingEntity deadEntity = event.getEntity();
-
-        // Chercher l'entité responsable de la mort.
         Entity attacker = event.getSource().getEntity();
 
-        LivingEntity killer = null;
-
-        // Si l'attaquant possède Curse of Death, il reçoit les malédictions.
-        if (attacker instanceof LivingEntity livingAttacker
-                && livingAttacker.hasEffect(ModEffect.CURSE_OF_DEATH)) {
-            killer = livingAttacker;
-        }
-
-        // Sinon, conserver le comportement habituel :
-        // l'attaquant direct reçoit les malédictions.
-        else if (attacker instanceof LivingEntity livingAttacker) {
-            killer = livingAttacker;
-        }
-
-        if (killer == null || killer == deadEntity) {
+        if (!(attacker instanceof LivingEntity killer)) {
             return;
         }
 
-        // Malédictions transmises au tueur.
+        if (deadEntity == killer) {
+            return;
+        }
+
         MobEffectInstance[] curses = {
                 deadEntity.getEffect(ModEffect.CURSE_OF_DEATH),
                 deadEntity.getEffect(ModEffect.CURSE_OF_HATRED),
