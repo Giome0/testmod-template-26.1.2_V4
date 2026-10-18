@@ -99,15 +99,24 @@ public class ModEffectEvents {
             return;
         }
 
-        // Transfert de Curse of Death au tueur.
-        MobEffectInstance deathCurse =
-                deadEntity.getEffect(ModEffect.CURSE_OF_DEATH);
+        // Liste de toutes les malédictions à transmettre.
+        MobEffectInstance[] curses = {
+                deadEntity.getEffect(ModEffect.CURSE_OF_DEATH),
+                deadEntity.getEffect(ModEffect.CURSE_OF_HATRED),
+                deadEntity.getEffect(ModEffect.CURSE_OF_LONELINESS),
+                deadEntity.getEffect(ModEffect.CURSE_OF_DISGUST),
+                deadEntity.getEffect(ModEffect.CURSE_OF_JUDGING)
+        };
 
-        if (deathCurse != null) {
+        for (MobEffectInstance curse : curses) {
+            if (curse == null) {
+                continue;
+            }
+
             killer.addEffect(new MobEffectInstance(
-                    ModEffect.CURSE_OF_DEATH,
-                    deathCurse.getDuration(),
-                    deathCurse.getAmplifier()
+                    curse.getEffect(),
+                    curse.getDuration(),
+                    curse.getAmplifier()
             ));
         }
     }
