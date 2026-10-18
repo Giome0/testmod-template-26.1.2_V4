@@ -1,10 +1,12 @@
+
 package net.giome.testmod.effect;
 
 import net.giome.testmod.TestMod;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Player;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
@@ -21,9 +23,54 @@ public class ModEffectEvents {
             return;
         }
 
-        if (entity.level().isClientSide()) {
+        if (!(entity.level() instanceof ServerLevel serverLevel)) {
             return;
         }
+
+
+
+        // Sphère de fumée fine autour de Curse of Death
+        MobEffectInstance deathCurse =
+                entity.getEffect(ModEffect.CURSE_OF_DEATH);
+
+        // Actualisation toutes les 2 ticks
+        if (deathCurse != null && entity.tickCount % 2 == 0) {
+            double radius = deathCurse.getAmplifier() + 2.0;
+
+            // Sphère légère : 12 rangées de 16 particules
+            int horizontalPoints = 15;
+            int verticalPoints = 6;
+
+            double centerY = entity.getY()
+                    + entity.getBbHeight() / 2.0;
+
+            for (int i = 1; i < verticalPoints; i++) {
+                double phi = Math.PI * i / verticalPoints;
+
+                for (int j = 0; j < horizontalPoints; j++) {
+                    double theta =
+                            2.0 * Math.PI * j / horizontalPoints;
+
+                    double x = entity.getX()
+                            + radius * Math.sin(phi) * Math.cos(theta);
+
+                    double y = centerY
+                            + radius * Math.cos(phi);
+
+                    double z = entity.getZ()
+                            + radius * Math.sin(phi) * Math.sin(theta);
+
+                    serverLevel.sendParticles(
+                            ParticleTypes.SMOKE,
+                            x, y, z,
+                            1,
+                            0.01, 0.01, 0.01,
+                            0.001
+                    );
+                }
+            }
+        }
+
 
         // Fusion : Curse of Disgust + Blessing of Love
         // -> Curse of Judging
@@ -99,7 +146,7 @@ public class ModEffectEvents {
             return;
         }
 
-        // Liste de toutes les malédictions à transmettre.
+        // Malédictions transmises au tueur
         MobEffectInstance[] curses = {
                 deadEntity.getEffect(ModEffect.CURSE_OF_DEATH),
                 deadEntity.getEffect(ModEffect.CURSE_OF_HATRED),
