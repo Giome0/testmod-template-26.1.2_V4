@@ -1,4 +1,3 @@
-
 package net.giome.testmod.effect;
 
 import java.util.List;
@@ -21,11 +20,9 @@ import net.neoforged.neoforge.event.tick.EntityTickEvent;
 @EventBusSubscriber(modid = TestMod.MODID)
 public class ModEffectEvents {
 
-    // Chance d'attribuer un effet à une entité qui apparaît.
-    // 50 = 50 %, 100 = 100 %, 10 = 10 %, 0 = désactivé.
+    // Chance d'attribution aléatoire : 5 %.
     private static final int CHANCE_EFFET = 5;
 
-    // Liste des effets personnalisés pouvant être attribués aléatoirement.
     private static List<Holder<MobEffect>> getRandomEffects() {
         return List.of(
                 ModEffect.CURSE_OF_DEATH,
@@ -39,41 +36,36 @@ public class ModEffectEvents {
 
     @SubscribeEvent
     public static void onEntityJoinLevel(EntityJoinLevelEvent event) {
-        // Ne traiter que les entités vivantes.
         if (!(event.getEntity() instanceof LivingEntity entity)) {
             return;
         }
 
-        // L'attribution doit se faire côté serveur.
         if (!(event.getLevel() instanceof ServerLevel)) {
             return;
         }
 
-        // Ne pas réattribuer un effet aux entités rechargées depuis le monde.
         if (event.loadedFromDisk()) {
             return;
         }
 
-        // Éviter de remplacer un effet personnalisé déjà présent.
         List<Holder<MobEffect>> effects = getRandomEffects();
 
+        // Ne pas remplacer un effet personnalisé déjà présent.
         if (entity.getActiveEffects().stream()
                 .anyMatch(activeEffect ->
                         effects.contains(activeEffect.getEffect()))) {
             return;
         }
 
-        // Vérifier la chance.
         if (ThreadLocalRandom.current().nextInt(100) >= CHANCE_EFFET) {
             return;
         }
 
-        // Choisir un effet au hasard.
         Holder<MobEffect> selectedEffect = effects.get(
                 ThreadLocalRandom.current().nextInt(effects.size())
         );
 
-        // Durée -1 : effet permanent.
+        // Durée infinie.
         entity.addEffect(new MobEffectInstance(selectedEffect, -1));
     }
 
@@ -89,11 +81,10 @@ public class ModEffectEvents {
             return;
         }
 
-        // Sphère de fumée autour de Curse of Death.
+        // Particules de fumée autour du porteur de Curse of Death.
         MobEffectInstance deathCurse =
                 entity.getEffect(ModEffect.CURSE_OF_DEATH);
 
-        // Actualisation toutes les 2 ticks.
         if (deathCurse != null && entity.tickCount % 2 == 0) {
             double radius = deathCurse.getAmplifier() + 2.0;
 
@@ -191,7 +182,6 @@ public class ModEffectEvents {
         }
     }
 
-
     @SubscribeEvent
     public static void onLivingDeath(LivingDeathEvent event) {
         LivingEntity deadEntity = event.getEntity();
@@ -205,6 +195,7 @@ public class ModEffectEvents {
             return;
         }
 
+        // Transmission habituelle des malédictions au tueur direct.
         MobEffectInstance[] curses = {
                 deadEntity.getEffect(ModEffect.CURSE_OF_DEATH),
                 deadEntity.getEffect(ModEffect.CURSE_OF_HATRED),
@@ -226,5 +217,6 @@ public class ModEffectEvents {
         }
     }
 }
+
 
 
