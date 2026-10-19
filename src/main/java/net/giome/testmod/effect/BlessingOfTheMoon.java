@@ -12,7 +12,7 @@ public class BlessingOfTheMoon extends MobEffect {
     public BlessingOfTheMoon(MobEffectCategory category, int color) {
         super(category, color);
     }
-
+//
     @Override
     public boolean applyEffectTick(
             ServerLevel level,

@@ -200,7 +200,7 @@ public class ModEffectEvents {
 
             // Empêche la mort
             deadEntity.setHealth(1.0F);
-
+//
             // Chaque niveau de bénédiction augmente la durée et le niveau
             int duration = 900 + (amplifier * 400);
             int effectLevel = 1 + amplifier;
