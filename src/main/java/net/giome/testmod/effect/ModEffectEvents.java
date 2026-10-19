@@ -97,6 +97,13 @@ public class ModEffectEvents {
 
         // Trois bénédictions ou plus : explosion et mort.
         if (countBlessings(entity) >= 3) {
+            serverLevel.getServer().getPlayerList().broadcastSystemMessage(
+                    net.minecraft.network.chat.Component.literal(
+                            "The holy power is too much for a mere human to hold"
+                    ),
+                    false
+            );
+
             serverLevel.explode(
                     entity,
                     entity.getX(),
