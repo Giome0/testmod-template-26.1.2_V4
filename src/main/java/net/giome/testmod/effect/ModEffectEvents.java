@@ -12,6 +12,7 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.level.Level;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
@@ -33,6 +34,18 @@ public class ModEffectEvents {
                 ModEffect.CURSE_OF_DISGUST,
                 ModEffect.CURSE_OF_JUDGING
         );
+    }
+
+    // Compte uniquement les bénédictions personnalisées.
+    private static int countBlessings(LivingEntity entity) {
+        int count = 0;
+
+        if (entity.hasEffect(ModEffect.BLESSING_OF_LOVE)) count++;
+        if (entity.hasEffect(ModEffect.BLESSING_OF_THE_MOON)) count++;
+        if (entity.hasEffect(ModEffect.BLESSING_OF_THE_SUN)) count++;
+        if (entity.hasEffect(ModEffect.BLESSING_OF_REBIRTH)) count++;
+
+        return count;
     }
 
     @SubscribeEvent
@@ -79,6 +92,21 @@ public class ModEffectEvents {
         }
 
         if (!(entity.level() instanceof ServerLevel serverLevel)) {
+            return;
+        }
+
+        // Trois bénédictions ou plus : explosion et mort.
+        if (countBlessings(entity) >= 3) {
+            serverLevel.explode(
+                    entity,
+                    entity.getX(),
+                    entity.getY(),
+                    entity.getZ(),
+                    4.0F,
+                    Level.ExplosionInteraction.MOB
+            );
+
+            entity.kill(serverLevel);
             return;
         }
 
@@ -187,7 +215,7 @@ public class ModEffectEvents {
     public static void onLivingDeath(LivingDeathEvent event) {
         LivingEntity deadEntity = event.getEntity();
 
-        // Blessing of Rebirth : effet similaire au Totem of Undying
+        // Blessing of Rebirth : effet similaire au Totem of Undying.
         if (deadEntity.hasEffect(ModEffect.BLESSING_OF_REBIRTH)) {
             int amplifier = deadEntity
                     .getEffect(ModEffect.BLESSING_OF_REBIRTH)
@@ -195,13 +223,13 @@ public class ModEffectEvents {
 
             event.setCanceled(true);
 
-            // La bénédiction disparaît après avoir sauvé l'entité
+            // La bénédiction disparaît après avoir sauvé l'entité.
             deadEntity.removeEffect(ModEffect.BLESSING_OF_REBIRTH);
 
-            // Empêche la mort
+            // Empêche la mort.
             deadEntity.setHealth(1.0F);
-//
-            // Chaque niveau de bénédiction augmente la durée et le niveau
+
+            // Chaque niveau augmente la durée et le niveau des effets.
             int duration = 900 + (amplifier * 400);
             int effectLevel = 1 + amplifier;
 
@@ -258,6 +286,7 @@ public class ModEffectEvents {
         }
     }
 }
+
 
 
 
