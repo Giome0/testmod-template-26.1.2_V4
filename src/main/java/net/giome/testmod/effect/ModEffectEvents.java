@@ -9,6 +9,7 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -188,26 +189,39 @@ public class ModEffectEvents {
 
         // Blessing of Rebirth : effet similaire au Totem of Undying
         if (deadEntity.hasEffect(ModEffect.BLESSING_OF_REBIRTH)) {
+            int amplifier = deadEntity
+                    .getEffect(ModEffect.BLESSING_OF_REBIRTH)
+                    .getAmplifier();
+
             event.setCanceled(true);
 
-            // La bénédiction ne peut servir qu'une seule fois
+            // La bénédiction disparaît après avoir sauvé l'entité
             deadEntity.removeEffect(ModEffect.BLESSING_OF_REBIRTH);
 
-            // Survit avec un demi-cœur
+            // Empêche la mort
             deadEntity.setHealth(1.0F);
 
-            // Effets du Totem of Undying
-            deadEntity.addEffect(new MobEffectInstance(
-                    net.minecraft.world.effect.MobEffects.REGENERATION,
-                    900, 1));
+            // Chaque niveau de bénédiction augmente la durée et le niveau
+            int duration = 900 + (amplifier * 400);
+            int effectLevel = 1 + amplifier;
 
             deadEntity.addEffect(new MobEffectInstance(
-                    net.minecraft.world.effect.MobEffects.FIRE_RESISTANCE,
-                    800, 0));
+                    MobEffects.REGENERATION,
+                    duration,
+                    effectLevel
+            ));
 
             deadEntity.addEffect(new MobEffectInstance(
-                    net.minecraft.world.effect.MobEffects.ABSORPTION,
-                    100, 1));
+                    MobEffects.FIRE_RESISTANCE,
+                    duration,
+                    effectLevel
+            ));
+
+            deadEntity.addEffect(new MobEffectInstance(
+                    MobEffects.ABSORPTION,
+                    200 + (amplifier * 100),
+                    effectLevel
+            ));
 
             return;
         }

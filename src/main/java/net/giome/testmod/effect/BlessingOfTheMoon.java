@@ -1,4 +1,3 @@
-
 package net.giome.testmod.effect;
 
 import net.minecraft.server.level.ServerLevel;
@@ -15,29 +14,36 @@ public class BlessingOfTheMoon extends MobEffect {
     }
 
     @Override
-    public boolean applyEffectTick(ServerLevel level, LivingEntity entity, int amplifier) {
+    public boolean applyEffectTick(
+            ServerLevel level,
+            LivingEntity entity,
+            int amplifier) {
+
         long time = level.getOverworldClockTime() % 24000L;
 
-        // La bénédiction fonctionne pendant la nuit
+        // Active uniquement pendant la nuit
         if (time >= 13000L && time < 23000L) {
-            entity.addEffect(new MobEffectInstance(
-                    MobEffects.SPEED, 30, 1));
+            int effectLevel = amplifier + 1;
 
             entity.addEffect(new MobEffectInstance(
-                    MobEffects.STRENGTH, 30, 1));
+                    MobEffects.SPEED, 30, effectLevel));
 
             entity.addEffect(new MobEffectInstance(
-                    MobEffects.RESISTANCE, 30, 0));
+                    MobEffects.STRENGTH, 30, effectLevel));
 
             entity.addEffect(new MobEffectInstance(
-                    MobEffects.HEALTH_BOOST, 30, 4));
+                    MobEffects.RESISTANCE, 30, effectLevel));
+
+            entity.addEffect(new MobEffectInstance(
+                    MobEffects.HEALTH_BOOST, 30, effectLevel));
         }
 
         return super.applyEffectTick(level, entity, amplifier);
     }
 
     @Override
-    public boolean shouldApplyEffectTickThisTick(int tickCount, int amplification) {
+    public boolean shouldApplyEffectTickThisTick(
+            int tickCount, int amplification) {
         return tickCount % 10 == 0;
     }
 }
