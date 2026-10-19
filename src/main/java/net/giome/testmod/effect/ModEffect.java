@@ -22,7 +22,6 @@ public class ModEffect {
     public static final Holder<MobEffect> BLESSING_OF_LOVE = MOB_EFFECTS.register("blessing_of_love",
             () -> new BlessingOfLove(MobEffectCategory.BENEFICIAL, 0xFF0000));
 
-
     public static final Holder<MobEffect> CURSE_OF_LONELINESS = MOB_EFFECTS.register("curse_of_loneliness",
             () -> new CurseOfLoneliness(MobEffectCategory.NEUTRAL, 0x4B0082));
 
@@ -31,6 +30,13 @@ public class ModEffect {
 
     public static final Holder<MobEffect> CURSE_OF_JUDGING = MOB_EFFECTS.register("curse_of_judging",
             () -> new CurseOfJudging(MobEffectCategory.NEUTRAL, 0x696969));
+
+    public static final Holder<MobEffect> BLESSING_OF_THE_MOON = MOB_EFFECTS.register("blessing_of_the_moon",
+            () -> new BlessingOfTheMoon(MobEffectCategory.BENEFICIAL, 0x6633CC));
+
+    public static final Holder<MobEffect> BLESSING_OF_THE_SUN = MOB_EFFECTS.register("blessing_of_the_sun",
+            () -> new BlessingOfTheSun(MobEffectCategory.BENEFICIAL, 0xFFD700));
+
 
 
     public static void register(IEventBus eventBus) {
