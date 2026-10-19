@@ -185,6 +185,33 @@ public class ModEffectEvents {
     @SubscribeEvent
     public static void onLivingDeath(LivingDeathEvent event) {
         LivingEntity deadEntity = event.getEntity();
+
+        // Blessing of Rebirth : effet similaire au Totem of Undying
+        if (deadEntity.hasEffect(ModEffect.BLESSING_OF_REBIRTH)) {
+            event.setCanceled(true);
+
+            // La bénédiction ne peut servir qu'une seule fois
+            deadEntity.removeEffect(ModEffect.BLESSING_OF_REBIRTH);
+
+            // Survit avec un demi-cœur
+            deadEntity.setHealth(1.0F);
+
+            // Effets du Totem of Undying
+            deadEntity.addEffect(new MobEffectInstance(
+                    net.minecraft.world.effect.MobEffects.REGENERATION,
+                    900, 1));
+
+            deadEntity.addEffect(new MobEffectInstance(
+                    net.minecraft.world.effect.MobEffects.FIRE_RESISTANCE,
+                    800, 0));
+
+            deadEntity.addEffect(new MobEffectInstance(
+                    net.minecraft.world.effect.MobEffects.ABSORPTION,
+                    100, 1));
+
+            return;
+        }
+
         Entity attacker = event.getSource().getEntity();
 
         if (!(attacker instanceof LivingEntity killer)) {

@@ -37,7 +37,8 @@ public class ModEffect {
     public static final Holder<MobEffect> BLESSING_OF_THE_SUN = MOB_EFFECTS.register("blessing_of_the_sun",
             () -> new BlessingOfTheSun(MobEffectCategory.BENEFICIAL, 0xFFD700));
 
-
+    public static final Holder<MobEffect> BLESSING_OF_REBIRTH = MOB_EFFECTS.register("blessing_of_rebirth",
+            () -> new BlessingOfRebirth(MobEffectCategory.BENEFICIAL, 0xFF69B4));
 
     public static void register(IEventBus eventBus) {
         MOB_EFFECTS.register(eventBus);
