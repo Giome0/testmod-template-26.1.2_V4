@@ -2,12 +2,15 @@
 package net.giome.testmod.effect;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 
 import net.giome.testmod.TestMod;
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.Holder;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
@@ -27,7 +30,6 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
 import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
 import net.neoforged.neoforge.event.tick.EntityTickEvent;
-import net.minecraft.ChatFormatting;
 
 @EventBusSubscriber(modid = TestMod.MODID)
 public class ModEffectEvents {
@@ -35,9 +37,8 @@ public class ModEffectEvents {
     private static final int CHANCE_EFFET = 5;
     private static final int EXPLOSION_DELAY = 60;
 
-    // Compte à rebours avant l'explosion.
-    private static final Map<UUID, Integer> explosionCountdown =
-            new HashMap<>();
+    private static final Map<UUID, Integer> explosionCountdown = new HashMap<>();
+    private static final Set<UUID> explosionHandled = new HashSet<>();
 
     private static List<Holder<MobEffect>> getRandomEffects() {
         return List.of(
@@ -50,14 +51,21 @@ public class ModEffectEvents {
         );
     }
 
-    // Compte uniquement les bénédictions.
     private static int countBlessings(LivingEntity entity) {
         int count = 0;
 
-        if (entity.hasEffect(ModEffect.BLESSING_OF_LOVE)) count++;
-        if (entity.hasEffect(ModEffect.BLESSING_OF_THE_MOON)) count++;
-        if (entity.hasEffect(ModEffect.BLESSING_OF_THE_SUN)) count++;
-        if (entity.hasEffect(ModEffect.BLESSING_OF_REBIRTH)) count++;
+        if (entity.hasEffect(ModEffect.BLESSING_OF_LOVE)) {
+            count++;
+        }
+        if (entity.hasEffect(ModEffect.BLESSING_OF_THE_MOON)) {
+            count++;
+        }
+        if (entity.hasEffect(ModEffect.BLESSING_OF_THE_SUN)) {
+            count++;
+        }
+        if (entity.hasEffect(ModEffect.BLESSING_OF_REBIRTH)) {
+            count++;
+        }
 
         return count;
     }
@@ -107,19 +115,22 @@ public class ModEffectEvents {
             return;
         }
 
-        // Gère le compte à rebours déjà commencé.
-        Integer remaining = explosionCountdown.get(entity.getUUID());
+        UUID entityId = entity.getUUID();
+
+        // IMPORTANT : traiter le compte à rebours AVANT le verrou.
+        // Sinon, l'explosion ne se déclencherait jamais.
+        Integer remaining = explosionCountdown.get(entityId);
 
         if (remaining != null) {
             remaining--;
 
             if (remaining <= 0) {
-                explosionCountdown.remove(entity.getUUID());
+                explosionCountdown.remove(entityId);
 
-                // On conserve Rebirth jusqu'à l'événement de mort.
-                boolean hasRebirth =
+                boolean hadRebirth =
                         entity.hasEffect(ModEffect.BLESSING_OF_REBIRTH);
 
+                // Explosion au bout de 3 secondes.
                 serverLevel.explode(
                         entity,
                         entity.getX(),
@@ -129,25 +140,35 @@ public class ModEffectEvents {
                         Level.ExplosionInteraction.MOB
                 );
 
-                // Sans Rebirth, on force la mort si l'explosion
-                // n'a pas déjà tué l'entité.
-                if (!hasRebirth && entity.isAlive()) {
-                    entity.kill(serverLevel);
+                // Si l'entité est encore vivante, on la tue.
+                // La bénédiction de renaissance peut annuler cette mort.
+                if (entity.isAlive()) {
+                    boolean stillHasRebirth =
+                            entity.hasEffect(ModEffect.BLESSING_OF_REBIRTH);
+
+                    if (!hadRebirth || stillHasRebirth) {
+                        entity.kill(serverLevel);
+                    }
                 }
             } else {
-                explosionCountdown.put(entity.getUUID(), remaining);
+                explosionCountdown.put(entityId, remaining);
             }
 
             return;
         }
 
-        // Trois bénédictions ou plus : avertissement, puis explosion.
-        for (ServerPlayer player : serverLevel.players()) {
-            player.connection.send(
-                    new ClientboundSetTitlesAnimationPacket(0, 60, 0)
-            );
+        // Empêche de redémarrer le compte à rebours
+        // après que la règle a déjà été déclenchée.
+        if (explosionHandled.contains(entityId)) {
+            return;
+        }
 
-            // Titre : "holy power" en or et en gras.
+        // Trois bénédictions ou plus déclenchent la règle.
+        // Les malédictions ne sont pas comptées.
+        if (countBlessings(entity) >= 3) {
+            explosionHandled.add(entityId);
+            explosionCountdown.put(entityId, EXPLOSION_DELAY);
+
             Component title = Component.literal("The ")
                     .withStyle(ChatFormatting.WHITE)
                     .append(
@@ -162,7 +183,6 @@ public class ModEffectEvents {
                                     .withStyle(ChatFormatting.WHITE)
                     );
 
-            // Sous-titre : "mere human" en rouge et en gras.
             Component subtitle = Component.literal("for a ")
                     .withStyle(ChatFormatting.WHITE)
                     .append(
@@ -177,16 +197,26 @@ public class ModEffectEvents {
                                     .withStyle(ChatFormatting.WHITE)
                     );
 
-            player.connection.send(
-                    new ClientboundSetTitleTextPacket(title)
-            );
+            // Affiche le titre aux joueurs présents dans ce monde.
+            for (ServerPlayer player : serverLevel.players()) {
+                player.connection.send(
+                        new ClientboundSetTitlesAnimationPacket(0, 60, 0)
+                );
 
-            player.connection.send(
-                    new ClientboundSetSubtitleTextPacket(subtitle)
-            );
+                player.connection.send(
+                        new ClientboundSetTitleTextPacket(title)
+                );
+
+                player.connection.send(
+                        new ClientboundSetSubtitleTextPacket(subtitle)
+                );
+            }
+
+            return;
         }
 
-        // Particules autour des entités avec Curse of Death.
+        // Particules de fumée en sphère autour des entités
+        // affectées par Curse of Death.
         MobEffectInstance deathCurse =
                 entity.getEffect(ModEffect.CURSE_OF_DEATH);
 
@@ -194,9 +224,7 @@ public class ModEffectEvents {
             double radius = deathCurse.getAmplifier() + 2.0;
             int horizontalPoints = 15;
             int verticalPoints = 6;
-
-            double centerY =
-                    entity.getY() + entity.getBbHeight() / 2.0;
+            double centerY = entity.getY() + entity.getBbHeight() / 2.0;
 
             for (int i = 1; i < verticalPoints; i++) {
                 double phi = Math.PI * i / verticalPoints;
@@ -208,8 +236,7 @@ public class ModEffectEvents {
                     double x = entity.getX()
                             + radius * Math.sin(phi) * Math.cos(theta);
 
-                    double y = centerY
-                            + radius * Math.cos(phi);
+                    double y = centerY + radius * Math.cos(phi);
 
                     double z = entity.getZ()
                             + radius * Math.sin(phi) * Math.sin(theta);
@@ -225,8 +252,9 @@ public class ModEffectEvents {
             }
         }
 
-        // Fusion : Curse of Disgust + Blessing of Love
-        // -> Curse of Judging
+        // Fusion :
+        // Curse of Disgust + Blessing of Love
+        // -> Curse of Judging.
         if (!entity.hasEffect(ModEffect.CURSE_OF_JUDGING)) {
             MobEffectInstance disgust =
                     entity.getEffect(ModEffect.CURSE_OF_DISGUST);
@@ -241,24 +269,26 @@ public class ModEffectEvents {
                 );
 
                 int amplifier =
-                        disgust.getAmplifier()
-                                + love.getAmplifier() + 1;
+                        disgust.getAmplifier() + love.getAmplifier() + 1;
 
                 entity.removeEffect(ModEffect.CURSE_OF_DISGUST);
                 entity.removeEffect(ModEffect.BLESSING_OF_LOVE);
 
-                entity.addEffect(new MobEffectInstance(
-                        ModEffect.CURSE_OF_JUDGING,
-                        duration,
-                        amplifier
-                ));
+                entity.addEffect(
+                        new MobEffectInstance(
+                                ModEffect.CURSE_OF_JUDGING,
+                                duration,
+                                amplifier
+                        )
+                );
 
                 return;
             }
         }
 
-        // Fusion : Curse of Death + Blessing of Love
-        // -> Curse of Loneliness
+        // Fusion :
+        // Curse of Death + Blessing of Love
+        // -> Curse of Loneliness.
         if (!entity.hasEffect(ModEffect.CURSE_OF_LONELINESS)) {
             MobEffectInstance death =
                     entity.getEffect(ModEffect.CURSE_OF_DEATH);
@@ -273,17 +303,18 @@ public class ModEffectEvents {
                 );
 
                 int amplifier =
-                        death.getAmplifier()
-                                + love.getAmplifier() + 1;
+                        death.getAmplifier() + love.getAmplifier() + 1;
 
                 entity.removeEffect(ModEffect.CURSE_OF_DEATH);
                 entity.removeEffect(ModEffect.BLESSING_OF_LOVE);
 
-                entity.addEffect(new MobEffectInstance(
-                        ModEffect.CURSE_OF_LONELINESS,
-                        duration,
-                        amplifier
-                ));
+                entity.addEffect(
+                        new MobEffectInstance(
+                                ModEffect.CURSE_OF_LONELINESS,
+                                duration,
+                                amplifier
+                        )
+                );
             }
         }
     }
@@ -292,7 +323,7 @@ public class ModEffectEvents {
     public static void onLivingDeath(LivingDeathEvent event) {
         LivingEntity deadEntity = event.getEntity();
 
-        // Blessing of Rebirth : sauve l'entité une fois.
+        // Blessing of Rebirth annule la mort et soigne l'entité.
         if (deadEntity.hasEffect(ModEffect.BLESSING_OF_REBIRTH)) {
             int amplifier = deadEntity
                     .getEffect(ModEffect.BLESSING_OF_REBIRTH)
@@ -306,28 +337,34 @@ public class ModEffectEvents {
             int duration = 900 + (amplifier * 400);
             int effectLevel = 1 + amplifier;
 
-            deadEntity.addEffect(new MobEffectInstance(
-                    MobEffects.REGENERATION,
-                    duration,
-                    effectLevel
-            ));
+            deadEntity.addEffect(
+                    new MobEffectInstance(
+                            MobEffects.REGENERATION,
+                            duration,
+                            effectLevel
+                    )
+            );
 
-            deadEntity.addEffect(new MobEffectInstance(
-                    MobEffects.FIRE_RESISTANCE,
-                    duration,
-                    effectLevel
-            ));
+            deadEntity.addEffect(
+                    new MobEffectInstance(
+                            MobEffects.FIRE_RESISTANCE,
+                            duration,
+                            effectLevel
+                    )
+            );
 
-            deadEntity.addEffect(new MobEffectInstance(
-                    MobEffects.ABSORPTION,
-                    200 + (amplifier * 100),
-                    effectLevel
-            ));
+            deadEntity.addEffect(
+                    new MobEffectInstance(
+                            MobEffects.ABSORPTION,
+                            200 + (amplifier * 100),
+                            effectLevel
+                    )
+            );
 
             return;
         }
 
-        // Transfert des malédictions au tueur direct.
+        // Transfert des malédictions au tueur.
         Entity attacker = event.getSource().getEntity();
 
         if (!(attacker instanceof LivingEntity killer)) {
@@ -351,17 +388,13 @@ public class ModEffectEvents {
                 continue;
             }
 
-            killer.addEffect(new MobEffectInstance(
-                    curse.getEffect(),
-                    curse.getDuration(),
-                    curse.getAmplifier()
-            ));
+            killer.addEffect(
+                    new MobEffectInstance(
+                            curse.getEffect(),
+                            curse.getDuration(),
+                            curse.getAmplifier()
+                    )
+            );
         }
     }
 }
-
-
-
-
-
-
