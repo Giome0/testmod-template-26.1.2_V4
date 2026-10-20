@@ -12,7 +12,7 @@ public class BlankCodexScreen extends Screen {
     private static final Identifier BACKGROUND =
             Identifier.fromNamespaceAndPath(
                     TestMod.MODID,
-                    "textures/gui/blank_codex/blank_codex_GUI.png"
+                    "assets/testmod/textures/gui/blank_codex/blank_codex_GUI.png"
             );
 
     // Taille d'affichage de l'interface.
