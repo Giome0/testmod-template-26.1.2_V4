@@ -34,7 +34,7 @@ public class CurseOfHatred extends MobEffect {
 
             // Les mobs passifs n'ont pas d'attaque : on les fait avancer et frapper à la main
             if (!mob.getAttributes().hasAttribute(Attributes.ATTACK_DAMAGE)) {
-                mob.getNavigation().moveTo(victim, 1.5);
+                mob.getNavigation().moveTo(victim, 1.2);
 
                 if (mob.distanceToSqr(victim) <= ATTACK_REACH_SQR && mob.tickCount % 20 < 5) {
                     victim.hurtServer(serverLevel, mob.damageSources().mobAttack(mob), PASSIVE_MOB_DAMAGE);

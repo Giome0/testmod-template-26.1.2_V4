@@ -43,7 +43,7 @@ public class ModItems {
 
     public static final DeferredItem<Item> HOLY_CODEX = ITEMS.registerItem("holy_codex", properties -> new Item(properties.stacksTo(1)));
 
-    public static final DeferredItem<Item> BURNED_CODEX = ITEMS.registerItem("burned_codex", properties -> new Item(properties.stacksTo(1)));
+    public static final DeferredItem<Item> BURNED_CODEX = ITEMS.registerSimpleItem("burned_codex");
 
     public static void register(IEventBus eventsBus){
         ITEMS.register(eventsBus);

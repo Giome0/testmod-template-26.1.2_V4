@@ -43,20 +43,21 @@ public class ModModelProvider extends ModelProvider {
 
         /* MISSILS */
 
-        itemModels.itemModelOutput.accept(
-                ModItems.MISSIL.get(),
-                ItemModelUtils.plainModel(Identifier.fromNamespaceAndPath(TestMod.MODID, "item/missil"))
+        itemModels.itemModelOutput.accept(ModItems.MISSIL.get(), ItemModelUtils.plainModel(Identifier.fromNamespaceAndPath(TestMod.MODID, "item/missil"))
         );
 
-        itemModels.itemModelOutput.accept(
-                ModItems.RESONITE_MISSIL.get(),
-                ItemModelUtils.plainModel(Identifier.fromNamespaceAndPath(TestMod.MODID, "item/resonite_missil"))
+        itemModels.itemModelOutput.accept(ModItems.RESONITE_MISSIL.get(), ItemModelUtils.plainModel(Identifier.fromNamespaceAndPath(TestMod.MODID, "item/resonite_missil"))
         );
 
-        itemModels.itemModelOutput.accept(
-                ModItems.REFINED_RESONITE_MISSIL.get(),
-                ItemModelUtils.plainModel(Identifier.fromNamespaceAndPath(TestMod.MODID, "item/refined_resonite_missil"))
+        itemModels.itemModelOutput.accept(ModItems.REFINED_RESONITE_MISSIL.get(), ItemModelUtils.plainModel(Identifier.fromNamespaceAndPath(TestMod.MODID, "item/refined_resonite_missil"))
         );
+
+        /* CODEX */
+
+        itemModels.generateFlatItem(ModItems.CURSE_CODEX.get(), ModelTemplates.FLAT_ITEM);
+        itemModels.generateFlatItem(ModItems.BLANK_CODEX.get(), ModelTemplates.FLAT_ITEM);
+        itemModels.generateFlatItem(ModItems.HOLY_CODEX.get(), ModelTemplates.FLAT_ITEM);
+        itemModels.generateFlatItem(ModItems.BURNED_CODEX.get(), ModelTemplates.FLAT_ITEM);
 
         /* BLOCKS */
 

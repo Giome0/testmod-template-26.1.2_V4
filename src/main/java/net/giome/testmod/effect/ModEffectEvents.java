@@ -252,6 +252,41 @@ public class ModEffectEvents {
             }
         }
 
+        MobEffectInstance lonelinessCurse =
+                entity.getEffect(ModEffect.CURSE_OF_LONELINESS);
+
+        if (lonelinessCurse != null && entity.tickCount % 2 == 0) {
+            double radius = lonelinessCurse.getAmplifier() + 2.0;
+            int horizontalPoints = 15;
+            int verticalPoints = 6;
+            double centerY = entity.getY() + entity.getBbHeight() / 2.0;
+
+            for (int i = 1; i < verticalPoints; i++) {
+                double phi = Math.PI * i / verticalPoints;
+
+                for (int j = 0; j < horizontalPoints; j++) {
+                    double theta =
+                            2.0 * Math.PI * j / horizontalPoints;
+
+                    double x = entity.getX()
+                            + radius * Math.sin(phi) * Math.cos(theta);
+
+                    double y = centerY + radius * Math.cos(phi);
+
+                    double z = entity.getZ()
+                            + radius * Math.sin(phi) * Math.sin(theta);
+
+                    serverLevel.sendParticles(
+                            ParticleTypes.SMOKE,
+                            x, y, z,
+                            1,
+                            0.01, 0.01, 0.01,
+                            0.001
+                    );
+                }
+            }
+        }
+
         // Fusion :
         // Curse of Disgust + Blessing of Love
         // -> Curse of Judging.

@@ -5,6 +5,7 @@ import net.giome.testmod.TestMod;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
+import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
@@ -32,11 +33,24 @@ public class CurseOfLoneliness extends MobEffect {
     public boolean applyEffectTick(ServerLevel level, LivingEntity victim, int amplifier) {
         // Effet Curse of Death : dégâts aux entités vivantes proches.
         AABB damageArea = victim.getBoundingBox().inflate(amplifier + 2);
+
         List<Entity> entities = level.getEntities(victim, damageArea);
 
         for (Entity entity : entities) {
-            if (entity instanceof LivingEntity living) {
-                living.hurtServer(level, victim.damageSources().magic(), 100000);
+            if (!(entity instanceof LivingEntity living)) {
+                continue;
+            }
+
+            boolean hurt = living.hurtServer(
+                    level,
+                    living.damageSources().magic(),
+                    100000
+            );
+
+            // Si les dégâts de cette malédiction tuent la victime,
+            // transférer ses malédictions au porteur.
+            if (hurt && victim.isDeadOrDying()) {
+                transferCurses(victim, living);
             }
         }
 
@@ -68,6 +82,28 @@ public class CurseOfLoneliness extends MobEffect {
         }
 
         return super.applyEffectTick(level, victim, amplifier);
+    }
+
+    private static void transferCurses(LivingEntity victim, LivingEntity killer) {
+        MobEffectInstance[] curses = {
+                victim.getEffect(ModEffect.CURSE_OF_DEATH),
+                victim.getEffect(ModEffect.CURSE_OF_HATRED),
+                victim.getEffect(ModEffect.CURSE_OF_LONELINESS),
+                victim.getEffect(ModEffect.CURSE_OF_DISGUST),
+                victim.getEffect(ModEffect.CURSE_OF_JUDGING)
+        };
+
+        for (MobEffectInstance curse : curses) {
+            if (curse == null) {
+                continue;
+            }
+
+            killer.addEffect(new MobEffectInstance(
+                    curse.getEffect(),
+                    curse.getDuration(),
+                    curse.getAmplifier()
+            ));
+        }
     }
 
     @Override
