@@ -36,5 +36,14 @@
   "effect.testmod.curse_of_disgust.description": "Everything avoid you",
 
   "effect.testmod.curse_of_judging": "Curse Of Judging",
-  "effect.testmod.curse_of_judging.description": "Everything judge you from afar"
+  "effect.testmod.curse_of_judging.description": "Everything judge you from afar",
+
+  "effect.testmod.blessing_of_rebirth": "Blessing Of Rebirth",
+  "effect.testmod.blessing_of_rebirth.description": "Bring back the flow in your veins",
+
+  "effect.testmod.blessing_of_the_moon": "Blessing Of The Moon",
+  "effect.testmod.blessing_of_the_moon.description": "The moon let you borrow a part of her power",
+
+  "effect.testmod.blessing_of_the_sun": "Blessing Of The Sun",
+  "effect.testmod.blessing_of_the_sun.description": "The sun let you borrow a part of hir power"
 }
