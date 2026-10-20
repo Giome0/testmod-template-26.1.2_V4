@@ -10,6 +10,11 @@
   "item.testmod.resonite_missil": "Resonite Missil",
   "item.testmod.refined_resonite_missil": "Refined Resonite Missil",
 
+  "item.testmod.curse_codex": "Curse Codex",
+  "item.testmod.blank_codex": "Blank Codex",
+  "item.testmod.holy_codex": "Holy Codex",
+  "item.testmod.burned_codex": "Burned Codex",
+
   "block.testmod.resonite_block": "Block of Resonite",
   "block.testmod.raw_resonite_block": "Block of Raw Resonite",
   "block.testmod.resonite_ore": "Resonite Ore",
@@ -19,6 +24,7 @@
   "creativetab.testmod.resonite_items": "Resonite Items",
   "creativetab.testmod.resonite_missils": "Missils Items",
   "creativetab.testmod.resonite_blocks": "Resonite Blocks",
+  "creativetab.testmod.sacred_item": "Sacred Item",
 
   "effect.testmod.curse_of_death": "Curse Of Death",
   "effect.testmod.curse_of_death.description": "Cause death around you",
