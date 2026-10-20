@@ -62,7 +62,7 @@ public class ModCreativeModTabs {
     public static final Supplier<CreativeModeTab> SACRED_ITEM_TAB = CREATIVE_MODE_TABS.register("sacred_item",
             () -> CreativeModeTab.builder().icon(() -> new ItemStack(ModItems.BLANK_CODEX.get()))
                     .title(Component.translatable("creativetab.testmod.sacred_item"))
-                    .withTabsBefore(Identifier.fromNamespaceAndPath(TestMod.MODID, "scred_item_tab"))
+                    .withTabsBefore(Identifier.fromNamespaceAndPath(TestMod.MODID, "resonite_blocks_tab"))
                     .displayItems((itemDisplayParameters, output) -> {
                                 output.accept(ModItems.CURSE_CODEX.get());
                                 output.accept(ModItems.BLANK_CODEX.get());

@@ -10,8 +10,6 @@ import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredItem;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
-import java.util.function.Supplier;
-
 public class ModItems {
     public static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(TestMod.MODID);
 
@@ -39,13 +37,13 @@ public class ModItems {
             p -> new missil(p, 30f, 60));
 
     // Sacred Items
-    public static final DeferredItem<Item> CURSE_CODEX = ITEMS.registerSimpleItem("curse_codex", (Supplier<Item.Properties>) new Item.Properties().stacksTo(1));
+    public static final DeferredItem<Item> CURSE_CODEX = ITEMS.registerItem("curse_codex", properties -> new Item(properties.stacksTo(1)));
 
     public static final DeferredItem<Item> BLANK_CODEX = ITEMS.registerItem("blank_codex", blank_codex::new);
 
-    public static final DeferredItem<Item> HOLY_CODEX = ITEMS.registerSimpleItem("holy_codex", (Supplier<Item.Properties>) new Item.Properties().stacksTo(1));
+    public static final DeferredItem<Item> HOLY_CODEX = ITEMS.registerItem("holy_codex", properties -> new Item(properties.stacksTo(1)));
 
-    public static final DeferredItem<Item> BURNED_CODEX = ITEMS.registerSimpleItem("burned_codex");
+    public static final DeferredItem<Item> BURNED_CODEX = ITEMS.registerItem("burned_codex", properties -> new Item(properties.stacksTo(1)));
 
     public static void register(IEventBus eventsBus){
         ITEMS.register(eventsBus);
