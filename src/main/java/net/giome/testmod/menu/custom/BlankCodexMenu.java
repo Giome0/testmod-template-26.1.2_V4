@@ -1,4 +1,4 @@
 package net.giome.testmod.menu.custom;
 
-public class codexMenu {
+public class BlankCodexMenu {
 }

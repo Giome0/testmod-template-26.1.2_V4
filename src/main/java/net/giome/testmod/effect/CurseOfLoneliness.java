@@ -41,17 +41,17 @@ public class CurseOfLoneliness extends MobEffect {
                 continue;
             }
 
+            // Ne pas attaquer une entité déjà morte.
+            if (living == victim || !living.isAlive()) {
+                continue;
+            }
+
+            // Le porteur de Curse of Loneliness inflige les dégâts.
             boolean hurt = living.hurtServer(
                     level,
-                    living.damageSources().magic(),
+                    victim.damageSources().magic(),
                     100000
             );
-
-            // Si les dégâts de cette malédiction tuent la victime,
-            // transférer ses malédictions au porteur.
-            if (hurt && victim.isDeadOrDying()) {
-                transferCurses(victim, living);
-            }
         }
 
         // Effet Blessing of Love : comportement toutes les 2 ticks.
@@ -82,28 +82,6 @@ public class CurseOfLoneliness extends MobEffect {
         }
 
         return super.applyEffectTick(level, victim, amplifier);
-    }
-
-    private static void transferCurses(LivingEntity victim, LivingEntity killer) {
-        MobEffectInstance[] curses = {
-                victim.getEffect(ModEffect.CURSE_OF_DEATH),
-                victim.getEffect(ModEffect.CURSE_OF_HATRED),
-                victim.getEffect(ModEffect.CURSE_OF_LONELINESS),
-                victim.getEffect(ModEffect.CURSE_OF_DISGUST),
-                victim.getEffect(ModEffect.CURSE_OF_JUDGING)
-        };
-
-        for (MobEffectInstance curse : curses) {
-            if (curse == null) {
-                continue;
-            }
-
-            killer.addEffect(new MobEffectInstance(
-                    curse.getEffect(),
-                    curse.getDuration(),
-                    curse.getAmplifier()
-            ));
-        }
     }
 
     @Override
